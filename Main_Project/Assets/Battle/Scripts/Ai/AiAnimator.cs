@@ -33,7 +33,6 @@ namespace Battle.Ai
 
         public void ChooseWeapon()
         {
-            Debug.Log(NormalState);
             if (animator == null)
                 animator = GetComponent<Animator>();
 

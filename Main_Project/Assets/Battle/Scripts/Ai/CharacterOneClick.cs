@@ -37,25 +37,10 @@ namespace Battle.Ai
                 }
                 AddWeapon(battleAI);
                 AddHealthBar(battleAI);
-                AddRetreater(battleAI);
                 
                 battleAI.SetupComponents();
                 battleAI.aiAnimator.ChooseWeapon();
             }
-        }
-
-        private void AddRetreater (BattleAI battleAI)
-        {
-            Transform existing = battleAI.transform.Find("Retreater");
-
-            if (existing != null)
-            {
-                Debug.LogWarning("이미 Retreater이 존재합니다.");
-                return;
-            }
-            GameObject RetreatTransform = new GameObject();
-            RetreatTransform.name = "Retreater";
-            RetreatTransform.transform.SetParent(battleAI.transform);
         }
         private void AddWeapon(BattleAI battleAI)
         {

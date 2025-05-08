@@ -5,32 +5,43 @@ namespace Battle.Ai.State
     public class IdleState : IState
     {
         private BattleAI ai;
+        private bool isChase;
 
-        public IdleState(BattleAI ai)
+        public IdleState(BattleAI ai, bool isChase)
         {
             this.ai = ai;
+            this.isChase = isChase;
         }
 
         public void EnterState()
         {
-            ai.StopMoving();
             ai.aiAnimator.Reset();
+            ai.aiAnimator.StopMove();
+            ai.aiPath.canMove = false;
+            ai.StopMoving();
+            ai.rb.velocity = Vector2.zero;
         }
 
         public void UpdateState()
         {
-            if (ai.HasEnemyInSight())
+            if (isChase)
             {
-                if (ai.IsInAttackRange())
+                if (ai.HasEnemyInSight())
                 {
-                    ai.rb.velocity = Vector2.zero;
-                    if(ai.CanAttack()) ai.StateMachine.ChangeState(new AttackState(ai));
+                    ai.destinationSetter.target = ai.CurrentTarget;
+                    if (ai.IsInAttackRange())
+                    {
+                        if (ai.CanAttack()) ai.StateMachine.ChangeState(new AttackState(ai));
+                    }
+                    else
+                    {
+                        ai.StateMachine.ChangeState(new ChaseState(ai));
+                    }
                 }
-                else
-                {
-                    ai.StateMachine.ChangeState(new ChaseState(ai));
-                    ai.aiAnimator.Move();
-                }
+            }
+            else
+            {
+                ai.StateMachine.ChangeState(new RetreatState(ai));
             }
         }
 

@@ -23,7 +23,10 @@ namespace Battle.Ai.State
         private IEnumerator EndDamageRoutine()
         {
             if (ai.IsDead()) ai.StateMachine.ChangeState(new DeadState(ai));
-            else ai.StateMachine.ChangeState(new IdleState(ai));
+            else
+            {
+                ai.StateMachine.ChangeState(new RetreatState(ai));
+            }
             yield return null;
         }
 

@@ -27,6 +27,10 @@ namespace Battle.Ai.Weapon
         public void ActivateCollider()
         {
             weaponCollider.enabled = true;
+        }
+
+        public void ColliderMove()
+        {
             transform.position = ownerAI.CurrentTarget.transform.position;
             ResetHitTargets();
         }

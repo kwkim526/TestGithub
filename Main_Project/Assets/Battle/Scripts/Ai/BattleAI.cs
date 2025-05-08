@@ -18,8 +18,10 @@ namespace Battle.Ai
     public class BattleAI : MonoBehaviour
     {
         public StateMachine StateMachine { get; private set; }
+        
         public Transform CurrentTarget;
         public Transform tempTarget;
+        public Transform Retreater;
 
         public TeamType team;
         public WeaponType weaponType;
@@ -29,16 +31,15 @@ namespace Battle.Ai
         public float moveSpeed = 2f;
         public float hp = 100f;
         public float damage = 1f;
-        public float retreatDistance = 1f;
+        public float retreatDistance = 3f;
 
-        [Min(0.5f)] public float AttackDelay = 0.5f;
+        [Min(0.25f)] public float AttackDelay = 0.5f;
 
         private float lastAttackTime;
 
         public AiAnimator aiAnimator;
         public WeaponTrigger weaponTrigger;
         public GameObject HealthBar;
-        public RetreatTarget retreatTargetmovement;
 
         public Targeting Targeting;
         public Rigidbody2D rb;
@@ -47,7 +48,6 @@ namespace Battle.Ai
 
         private Transform child;
         private Transform Weapon;
-        public Transform Retreater;
         
         public SpriteRenderer[] renderers;
         public Color[] originalColors;
@@ -56,6 +56,8 @@ namespace Battle.Ai
         public AIPath aiPath;
         public AIDestinationSetter destinationSetter;
         
+        public LayerMask obstacleMask;
+        
         public IsWinner isWinner;
 
         private void Awake()
@@ -63,7 +65,7 @@ namespace Battle.Ai
             Targeting = new Targeting(this);
             StateMachine = new StateMachine();
             characterValue = GetComponent<CharacterValue>();
-            isWinner = FindObjectOfType<IsWinner>();
+            isWinner = IsWinner.Instance;
 
             // HealthBar 자동 연결
             Transform hb = transform.Find("UnitRoot/HealthBar");
@@ -79,12 +81,17 @@ namespace Battle.Ai
 
         private void Start()
         {
+            StartCoroutine(DelayedStart());
+        }
+
+        private IEnumerator DelayedStart()
+        {
+            yield return new WaitForSeconds(Random.Range(0f, 0.5f)); // 0~0.5초 사이 랜덤 대기
             if (weaponTrigger != null)
             {
                 weaponTrigger.Initialize(this);
             }
-
-            StateMachine.ChangeState(new IdleState(this));
+            StateMachine.ChangeState(new IdleState(this, true));
         }
 
         private void Update()
@@ -112,26 +119,43 @@ namespace Battle.Ai
             if (CurrentTarget == null) return false;
             return Vector2.Distance(transform.position, CurrentTarget.position) <= attackRange;
         }
-        
-        public bool IsInRetreatDistance()
-        {
-            if (CurrentTarget == null) return false;
-            return Vector2.Distance(transform.position, CurrentTarget.position) <= retreatDistance;
-        }
 
         public void MoveTo(Vector3 target)
         {
-            Vector2 direction = (target - transform.position).normalized;
             aiPath.canMove = true;
-
+            ResumeMoving(target);
+        }
+        
+        public void ResumeMoving(Vector3 target)
+        {
+            Vector2 direction = (target - transform.position).normalized;
             transform.localScale = new Vector3(direction.x > 0 ? -1f : 1f, 1f, 1f);
             HealthBar?.GetComponent<HealthBarFixDirection>()?.ForceFix();
-
-            if (Vector2.Distance(transform.position, target) <= attackRange)
-                aiPath.canMove = false;
         }
 
-        public void StopMoving() => rb.velocity = Vector2.zero;
+        public void StopMoving()
+        {
+            rb.velocity = Vector2.zero;
+            destinationSetter.target = gameObject.transform;
+        }
+
+        // 근처 벽과의 거리 탐지
+        public bool IsWall()
+        {
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 0.2f, obstacleMask);
+            foreach (var hit in hits)
+            {
+                if (hit.CompareTag("Wall"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsInRetreatDistance() {
+            return Vector2.Distance(transform.position, Retreater.position) <= 0.1f;
+        }
 
         public void UseSkill() => Debug.Log($"{gameObject.name} UseSkill");
 
@@ -181,13 +205,7 @@ namespace Battle.Ai
         public void Kill()
         {
             isWinner.Winner(gameObject);
-            gameObject.SetActive(false);
-            Destroy(gameObject);
-        }
-        
-        // 배틀 종료
-        public void GameEnd ()
-        {
+            Destroy(Retreater.gameObject);
             gameObject.SetActive(false);
             Destroy(gameObject);
         }
@@ -211,15 +229,13 @@ namespace Battle.Ai
                     weaponTrigger = Weapon.gameObject.AddComponent<WeaponTrigger>();
                 }
             }
-            
-            // RetreatTarget 연결
-            Retreater = transform.Find("Retreater");
-            if (Retreater != null)
+            // Retreater 생성 및 연결
+            if (Retreater == null)
             {
-                if (!Retreater.TryGetComponent(out retreatTargetmovement))
-                {
-                    retreatTargetmovement = Retreater.gameObject.AddComponent<RetreatTarget>();
-                }
+                GameObject retreatObj = new GameObject(this.gameObject.name + "Retreat");
+                var retreatTarget = retreatObj.AddComponent<RetreatTarget>();
+                retreatTarget.ai = this;
+                Retreater = retreatObj.transform;
             }
             
             // UnitRoot 연결
@@ -243,7 +259,7 @@ namespace Battle.Ai
 
             // Collider 설정
             PlayerCollider.isTrigger = true;
-            PlayerCollider.radius = 0.25f;
+            PlayerCollider.radius = 0.1f;
             PlayerCollider.offset = new Vector2(0f, 0f);
 
             // HealthBar 연결

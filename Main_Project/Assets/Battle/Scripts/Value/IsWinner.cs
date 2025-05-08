@@ -5,6 +5,13 @@ namespace Battle.Value
     
     public class IsWinner : MonoBehaviour
     {
+        public static IsWinner Instance { get; private set; }
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+        
         public int playersNumber;
         public int enemiesNumber;
         private GameObject[] exitevent;
