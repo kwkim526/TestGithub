@@ -27,7 +27,7 @@ namespace Battle.Ai.State
             // 무기 활성화 시간만큼 대기
             yield return new WaitForSeconds(ai.AttackDelay/2f); // 이 숫자도 변수로 받을수도?
             ai.weaponTrigger.DeactivateCollider();
-            ai.StateMachine.ChangeState(new RetreatState(ai));
+            ai.StateMachine.ChangeState(new IdleState(ai,false,ai.AttackDelay));
         }
 
         public void UpdateState()

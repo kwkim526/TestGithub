@@ -54,7 +54,7 @@ namespace Battle.Ai.Weapon
             alreadyHit.Add(targetAI);
 
             // 피격 처리: 데미지 전달
-            targetAI.StateMachine.ChangeState(new DamageState(targetAI, ownerAI.damage));
+            targetAI.StateMachine.ChangeState(new DamageState(targetAI, ownerAI.damage, ownerAI.stunTime));
         }
     }
 }

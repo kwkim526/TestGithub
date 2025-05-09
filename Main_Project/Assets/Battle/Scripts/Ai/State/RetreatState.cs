@@ -26,9 +26,9 @@ namespace Battle.Ai.State
                 {
                     Debug.Log("후퇴 완료");
                     ai.destinationSetter.target = ai.CurrentTarget;
-                    ai.StateMachine.ChangeState(new IdleState(ai, true));
+                    ai.StateMachine.ChangeState(new IdleState(ai, true, ai.waitTime));
                 }
-                else ai.StateMachine.ChangeState(new IdleState(ai, true));
+                else ai.StateMachine.ChangeState(new IdleState(ai, true,ai.waitTime));
             }
         }
         public void ExitState()

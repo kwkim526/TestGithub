@@ -13,7 +13,7 @@ namespace Battle.Ai.State
             ai.aiAnimator.Reset();
             ai.aiAnimator.Move();
         }
-
+        
         public void UpdateState()
         {
             if (ai.CurrentTarget != null)
@@ -24,7 +24,7 @@ namespace Battle.Ai.State
             else
             {
                 ai.Targeting.FindNearestEnemy();
-                ai.StateMachine.ChangeState(new IdleState(ai, true));
+                ai.StateMachine.ChangeState(new IdleState(ai, true,ai.waitTime));
             }
             if (ai.IsInAttackRange() && ai.CanAttack()) ai.StateMachine.ChangeState(new AttackState(ai));
         }

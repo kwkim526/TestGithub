@@ -32,6 +32,8 @@ namespace Battle.Ai
         public float hp = 100f;
         public float damage = 1f;
         public float retreatDistance = 3f;
+        public float waitTime = 0.25f;
+        public float stunTime = 0.25f;
 
         [Min(0.25f)] public float AttackDelay = 0.5f;
 
@@ -91,7 +93,7 @@ namespace Battle.Ai
             {
                 weaponTrigger.Initialize(this);
             }
-            StateMachine.ChangeState(new IdleState(this, true));
+            StateMachine.ChangeState(new IdleState(this, true, 0f));
         }
 
         private void Update()
@@ -135,8 +137,8 @@ namespace Battle.Ai
 
         public void StopMoving()
         {
-            rb.velocity = Vector2.zero;
             destinationSetter.target = gameObject.transform;
+            rb.velocity = Vector2.zero;
         }
 
         // 근처 벽과의 거리 탐지

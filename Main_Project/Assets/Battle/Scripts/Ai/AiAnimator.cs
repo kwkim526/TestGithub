@@ -25,7 +25,7 @@ namespace Battle.Ai
         public void Reset()
         {
             animator.SetBool(isDead, false);
-            animator.SetBool(Moving, false);
+            animator.SetBool(Moving, true);
             animator.ResetTrigger(Attacking);
             animator.ResetTrigger(Damage);
             animator.ResetTrigger(Death);

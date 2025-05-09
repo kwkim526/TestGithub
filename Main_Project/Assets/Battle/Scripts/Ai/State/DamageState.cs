@@ -6,11 +6,13 @@ namespace Battle.Ai.State
     {
         private BattleAI ai;
         private float damage;
+        private float stun;
 
-        public DamageState(BattleAI ai, float damage)
+        public DamageState(BattleAI ai, float damage, float stun)
         {
             this.ai = ai;
             this.damage = damage;
+            this.stun = stun;
         }
 
         public void EnterState()
@@ -25,7 +27,7 @@ namespace Battle.Ai.State
             if (ai.IsDead()) ai.StateMachine.ChangeState(new DeadState(ai));
             else
             {
-                ai.StateMachine.ChangeState(new RetreatState(ai));
+                ai.StateMachine.ChangeState(ai.CurrentTarget == ai.destinationSetter.target ? new IdleState(ai, true, stun) : new IdleState(ai, false, stun));
             }
             yield return null;
         }
