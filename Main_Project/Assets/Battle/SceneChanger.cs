@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Battle.Scripts
+namespace Battle
 {
     public class SceneChanger : MonoBehaviour
     {

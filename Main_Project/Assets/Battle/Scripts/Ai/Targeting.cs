@@ -1,4 +1,5 @@
 using UnityEngine;
+
 namespace Battle.Scripts.Ai
 {
     public class Targeting
