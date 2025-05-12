@@ -57,7 +57,7 @@ namespace Battle.Scripts.Ai
 
             GameObject weaponObject = null;
 
-            if (battleAI.weaponType == WeaponType.bow)
+            if (battleAI.weaponType == WeaponType.Bow)
             {
                 // 🎯 프리팹 경로 (적절히 수정하세요)
                 string path = "Assets/Battle/Prefabs/Weapon/Bow.prefab";
@@ -69,6 +69,19 @@ namespace Battle.Scripts.Ai
                     return;
                 }
 
+                // 프리팹 인스턴스화
+                weaponObject = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            }
+            else if (battleAI.weaponType == WeaponType.Magic)
+            {
+                string path = "Assets/Battle/Prefabs/Weapon/Magic.prefab";
+                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+
+                if (prefab == null)
+                {
+                    Debug.LogError("Magic.prefab을 찾을 수 없습니다. 경로를 확인하세요.");
+                    return;
+                }
                 // 프리팹 인스턴스화
                 weaponObject = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             }

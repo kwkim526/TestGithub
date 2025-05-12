@@ -10,7 +10,7 @@ using StateMachine = Battle.Scripts.StateCore.StateMachine;
 namespace Battle.Scripts.Ai
 {
     public enum TeamType { Player, Enemy }
-    public enum WeaponType { Sword = 0, LongSpear = 66, TwoHanded = 100, shortSword = 83, bow = 16 }
+    public enum WeaponType { Sword = 0, LongSpear = 66, TwoHanded = 100, ShortSword = 83, Bow = 16, Magic = 33,}
 
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(CircleCollider2D))]
@@ -84,8 +84,10 @@ namespace Battle.Scripts.Ai
             {
                 Debug.LogWarning($"{name}의 HealthBar를 찾을 수 없습니다.");
             }
-
-            Transform arrow = transform.Find("bow");
+            Transform arrow = transform.Find("Bow"); //원거리 기본 무기: 활
+            
+            if (weaponType == WeaponType.Magic) arrow = transform.Find("Magic"); //마법사일 경우: 마법
+            
             if (arrow != null)
             {
                 if (arrowWeaponTrigger != null) // 원거리 무기 설정
@@ -97,7 +99,7 @@ namespace Battle.Scripts.Ai
             }
             else
             {
-                Debug.LogWarning($"{name}의 bow를 찾을 수 없습니다.");
+                Debug.LogWarning($"{name}의 원거리 무기를 찾을 수 없습니다.");
             }
         }
 
@@ -237,7 +239,7 @@ namespace Battle.Scripts.Ai
             Weapon = transform.Find(weaponType.ToString());
             if (Weapon != null)
             {
-                if (weaponType != WeaponType.bow)
+                if (weaponType != WeaponType.Bow && weaponType != WeaponType.Magic)
                 {
                     if (!Weapon.TryGetComponent(out weaponTrigger))
                     {
@@ -248,7 +250,8 @@ namespace Battle.Scripts.Ai
                 {
                     if (!Weapon.TryGetComponent(out arrowWeaponTrigger))
                     {
-                        Transform arrow = transform.Find("bow");
+                        Transform arrow = transform.Find("Bow");
+                        if(weaponType == WeaponType.Magic) arrow = transform.Find("Magic");
                         arrowWeaponTrigger = Weapon.gameObject.AddComponent<ArrowWeapon>();
                         if(arrow != null) arrowPrefab = arrow.gameObject;
                     }

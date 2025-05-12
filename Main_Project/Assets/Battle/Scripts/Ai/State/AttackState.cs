@@ -16,7 +16,7 @@ namespace Battle.Scripts.Ai.State
             Debug.Log($"{ai} : {ai.StateMachine.currentState}");
             ai.aiAnimator.Reset();
             ai.aiAnimator.Attack();
-            if (ai.weaponType == WeaponType.bow)
+            if (ai.weaponType == WeaponType.Bow || ai.weaponType == WeaponType.Magic)
             {
                 RangedAttack();
             }
