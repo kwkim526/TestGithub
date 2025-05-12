@@ -3314,9 +3314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ai: {fileID: 670266198}
-  baseDir: {x: 0, y: 0}
   retreatPos: {x: 0, y: 0}
-  randomPos: {x: 0, y: 0}
 --- !u!1001 &667368052
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4008,9 +4006,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ai: {fileID: 119526564}
-  baseDir: {x: 0, y: 0}
   retreatPos: {x: 0, y: 0}
-  randomPos: {x: 0, y: 0}
 --- !u!4 &726949171
 Transform:
   m_ObjectHideFlags: 0
@@ -4530,9 +4526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ai: {fileID: 1149504900}
-  baseDir: {x: 0, y: 0}
   retreatPos: {x: 0, y: 0}
-  randomPos: {x: 0, y: 0}
 --- !u!212 &980024611 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 5310673639293530625, guid: 014fe8d68eb894953acd12f99324c58a, type: 3}
@@ -5373,9 +5367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ai: {fileID: 1362064481}
-  baseDir: {x: 0, y: 0}
   retreatPos: {x: 0, y: 0}
-  randomPos: {x: 0, y: 0}
 --- !u!212 &1299597135 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 8819126551340863732, guid: 672092d6fae854c9da73ae8124fb85bc, type: 3}
@@ -5768,7 +5760,7 @@ MonoBehaviour:
   weaponType: 16
   sightRange: 20
   attackRange: 5
-  moveSpeed: 1
+  moveSpeed: 5
   hp: 100
   damage: 1
   retreatDistance: 3
@@ -5873,7 +5865,7 @@ MonoBehaviour:
   radius: 0.5
   height: 2
   canMove: 1
-  maxSpeed: 1
+  maxSpeed: 5
   gravity: {x: NaN, y: NaN, z: NaN}
   groundMask:
     serializedVersion: 2
@@ -5981,7 +5973,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.1
+  m_Radius: 0.5
 --- !u!50 &1362064488
 Rigidbody2D:
   serializedVersion: 4
@@ -6064,9 +6056,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ai: {fileID: 219924329}
-  baseDir: {x: 0, y: 0}
   retreatPos: {x: 0, y: 0}
-  randomPos: {x: 0, y: 0}
 --- !u!212 &1390289301 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 5739939120473290252, guid: 014fe8d68eb894953acd12f99324c58a, type: 3}
@@ -6859,9 +6849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ai: {fileID: 1343228891}
-  baseDir: {x: 0, y: 0}
   retreatPos: {x: 0, y: 0}
-  randomPos: {x: 0, y: 0}
 --- !u!4 &1709336027
 Transform:
   m_ObjectHideFlags: 0
@@ -7209,9 +7197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ai: {fileID: 1912786604}
-  baseDir: {x: 0, y: 0}
   retreatPos: {x: 0, y: 0}
-  randomPos: {x: 0, y: 0}
 --- !u!1 &1795085785 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6586271469749049026, guid: 014fe8d68eb894953acd12f99324c58a, type: 3}
@@ -7347,7 +7333,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.1
+  m_Radius: 0.5
 --- !u!50 &1795085788
 Rigidbody2D:
   serializedVersion: 4
@@ -8091,9 +8077,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ai: {fileID: 1795085786}
-  baseDir: {x: 0, y: 0}
   retreatPos: {x: 0, y: 0}
-  randomPos: {x: 0, y: 0}
 --- !u!212 &2064138709 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 8345604150734902614, guid: 672092d6fae854c9da73ae8124fb85bc, type: 3}

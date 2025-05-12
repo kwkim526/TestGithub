@@ -5,71 +5,47 @@ namespace Battle.Scripts.Ai
     public class RetreatTarget : MonoBehaviour
     {
         public BattleAI ai;
-        public Vector2 baseDir;
         public Vector2 retreatPos;
-        public Vector2 randomPos;
 
         public void SetRetreatTarget()
         {
-            if (ai.weaponType == WeaponType.bow)
-            {
-                Debug.LogWarning("활잡이");
-                //랜덤 좌표 생성 (범위 제한 포함)
-                randomPos = new Vector2(
-                    Random.Range(ai.retreatAreaMin.x, ai.retreatAreaMax.x),
-                    Random.Range(ai.retreatAreaMin.y, ai.retreatAreaMax.y)
-                );
-                ai.Retreater.position = randomPos;
-                ai.aiPath.canMove = true;
-            }
-            else
-            {
-                if (ai.IsInRetreatDistance() || ai.CurrentTarget == null)
-                    return;
-                if (ai.retreatDistance == 0)
-                {
-                    ai.Retreater.position = ai.transform.position;
-                }
-                else
-                {
-                    ai.tempTarget = ai.CurrentTarget;
-
-                    // 후퇴 방향 계산
-                    baseDir = (ai.transform.position - ai.tempTarget.position).normalized;
-                    retreatPos = (Vector2)ai.transform.position + baseDir * ai.retreatDistance;
-
-                    // 벽 내부 영역으로 제한
-                    retreatPos = new Vector2(
-                        Mathf.Clamp(retreatPos.x, ai.retreatAreaMin.x, ai.retreatAreaMax.x),
-                        Mathf.Clamp(retreatPos.y, ai.retreatAreaMin.y, ai.retreatAreaMax.y)
-                    );
-                
-
-                    // 벽 판정
-                    if (!IsWall())
-                    {
-                        ai.Retreater.position = retreatPos;
-                    }
-                    else
-                    {
-                        //랜덤 좌표 생성 (범위 제한 포함)
-                        Vector2 randomPos = new Vector2(
-                            Random.Range(ai.retreatAreaMin.x, ai.retreatAreaMax.x),
-                            Random.Range(ai.retreatAreaMin.y, ai.retreatAreaMax.y)
-                        );
-                        ai.Retreater.position = randomPos;
-                        ai.aiPath.canMove = true;
-                    }
-                
-                }
-            }
-            // 목적지 지정
-            ai.destinationSetter.target = ai.Retreater;
-        }
-        private bool IsWall()
-        {
+            const int maxAttempts = 10; // 최대 재시도 횟수
             Vector2 origin = ai.transform.position;
-            Vector2 direction = retreatPos - origin;
+
+            for (int i = 0; i < maxAttempts; i++)
+            {
+                // 랜덤한 단위 방향 벡터 생성 (normalized)
+                Vector2 randomDir = Random.insideUnitCircle.normalized;
+
+                // 이동 거리 반영
+                retreatPos = origin + randomDir * ai.retreatDistance;
+
+                // 영역 제한
+                retreatPos = new Vector2(
+                    Mathf.Clamp(retreatPos.x, ai.retreatAreaMin.x, ai.retreatAreaMax.x),
+                    Mathf.Clamp(retreatPos.y, ai.retreatAreaMin.y, ai.retreatAreaMax.y)
+                );
+
+                // 벽 판정
+                if (!IsWall(origin, retreatPos))
+                {
+                    ai.Retreater.position = retreatPos;
+                    ai.destinationSetter.target = ai.Retreater;
+                    ai.aiPath.canMove = true;
+                    return;
+                }
+            }
+
+            // 실패 시 현재 위치 유지 (혹은 Idle 전환 등 대체 행동)
+            ai.Retreater.position = origin;
+            ai.destinationSetter.target = ai.Retreater;
+            ai.aiPath.canMove = false;
+            Debug.LogWarning($"{ai.gameObject.name}의 후퇴 실패: 유효한 위치를 찾지 못함");
+        }
+
+        private bool IsWall(Vector2 origin, Vector2 target)
+        {
+            Vector2 direction = target - origin;
             float distance = direction.magnitude;
 
             RaycastHit2D hit = Physics2D.Raycast(origin, direction.normalized, distance, ai.obstacleMask);

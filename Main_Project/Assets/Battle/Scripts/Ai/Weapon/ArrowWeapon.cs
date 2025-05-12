@@ -21,21 +21,15 @@ namespace Battle.Scripts.Ai.Weapon
         
         public void FireArrow()
         {
-            if (arrowPrefab == null || ownerAI.CurrentTarget == null)
-            {
-                Debug.LogError("ArrowPrefab 또는 Target이 null");
-                return;
-            }
-
             GameObject arrow = Instantiate(arrowPrefab, ownerAI.transform.position, ownerAI.transform.rotation);
             arrow.layer = LayerMask.NameToLayer("Default");
     
             ArrowWeapon arrowWeapon = arrow.GetComponent<ArrowWeapon>();
             arrowWeapon.Initialize(ownerAI,arrowPrefab);
-            arrowWeapon.StartCoroutine(arrowWeapon.MoveToTarget(ownerAI.CurrentTarget.position, ownerAI.AttackDelay));
+            arrowWeapon.StartCoroutine(arrowWeapon.MoveToTarget(ownerAI.CurrentTarget.position, 0.1f));
         }
 
-        private IEnumerator MoveToTarget(Vector3 targetPos, float duration)
+        private IEnumerator MoveToTarget(Vector3 targetPos, float duration) //duration : 투사체 날아가는 시간
         {
             float elapsed = 0f;
             Vector3 start = transform.position;

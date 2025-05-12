@@ -35,14 +35,14 @@ namespace Battle.Scripts.Ai.State
 
         void RangedAttack()
         {
-            ai.arrowWeaponTrigger.FireArrow();
             ai.StartCoroutine(RangedAttackDelay());
-            ai.StateMachine.ChangeState(new IdleState(ai,false,ai.waitTime));
         }
 
         private IEnumerator RangedAttackDelay()
         {
             yield return new WaitForSeconds(ai.AttackDelay);
+            ai.arrowWeaponTrigger.FireArrow();
+            ai.StateMachine.ChangeState(new IdleState(ai,false,ai.waitTime));
         }
 
         private IEnumerator AttackDelay()

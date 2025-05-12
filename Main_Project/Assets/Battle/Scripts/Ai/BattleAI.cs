@@ -285,7 +285,7 @@ namespace Battle.Scripts.Ai
 
             // Collider 설정
             PlayerCollider.isTrigger = true;
-            PlayerCollider.radius = 0.1f;
+            PlayerCollider.radius = 0.5f;
             PlayerCollider.offset = new Vector2(0f, 0f);
 
             // HealthBar 연결
