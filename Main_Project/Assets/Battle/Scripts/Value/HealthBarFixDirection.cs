@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Battle.Scripts.Value
+namespace Battle.Value
 {
     public class HealthBarFixDirection : MonoBehaviour
     {
